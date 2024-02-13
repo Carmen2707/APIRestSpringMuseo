@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface MuseoRepository extends JpaRepository<Museo, Long> {
-    //Consultas GET simples.
+    //Consultas GET museo.
     public Museo getMuseoById(Long id);
 
     public Museo getMuseoByNombre(String nombre);
@@ -24,8 +24,6 @@ public interface MuseoRepository extends JpaRepository<Museo, Long> {
 
     public Museo getMuseoByDescripcion(String descripcion);
 
-
-
     @Query("SELECT m FROM Museo m WHERE m.precio=0.00")
     public List<Museo> museosEntradaGratis();
     @Query("SELECT m.nombre FROM Museo m")
@@ -40,6 +38,10 @@ public interface MuseoRepository extends JpaRepository<Museo, Long> {
     @Query("SELECT m FROM Museo m WHERE m.horario LIKE 'Todos los días%'")
     public List<Museo> museosAbrenSiempre();
 
-    @Query("SELECT m.descripcion FROM Museo m WHERE m.nombre = :nombre")
-    public String descripcionByNombre(@Param("nombre") String nombre);
+    @Query("SELECT m.nombre, m.web FROM Museo m")
+    public List<Object> listaWebs();
+
+
+
+
 }

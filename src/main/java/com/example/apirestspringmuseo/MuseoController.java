@@ -1,12 +1,12 @@
 package com.example.apirestspringmuseo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
+import javax.swing.plaf.multi.MultiSeparatorUI;
 import java.util.List;
 
 @RestController
@@ -14,6 +14,8 @@ import java.util.List;
 public class MuseoController {
     @Autowired //inicializar los componentes de sprint de forma automatica
     private MuseoRepository repositorio;
+
+    //METODOS GET.
 
     /**
      * @return Devuelve todos los museos.
@@ -95,10 +97,6 @@ public class MuseoController {
         return repositorio.getMuseoByDescripcion(descripcion);
     }
 
-    @GetMapping("/name")
-    public String getDescripcionByNombre(@PathVariable String name){
-        return repositorio.descripcionByNombre(name);
-    }
     /**
      * @return Devuelve una lista con los museos que tienen la entrada gratis.
      */
@@ -139,5 +137,89 @@ public class MuseoController {
         return repositorio.museosAbrenSiempre();
     }
 
+
+    /**
+     * @return Devuelve el nombre de los museos junto con su página web.
+     */
+    @GetMapping("/listaWebs")
+    public List<Object> getListaWebs(){
+        return repositorio.listaWebs();
+    }
+
+    //METODOS POST.
+
+    @Autowired
+    private SecurityService security;
+
+    /**
+     * @param museo objeto msuseo
+     * @param token token para validar
+     * @return Crea un museo nuevo, pero solo si el token es válido.
+     */
+    @PostMapping("/museo/post")
+    public ResponseEntity<Museo> nuevo(@RequestBody Museo museo, @RequestParam String token) {
+        if (security.validateToken(token)) {
+            return new ResponseEntity<Museo>(repositorio.save(museo), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    //METODOS PUT.
+
+
+    /**
+     * @param id del museo
+     * @param museoNuevo nuevo museo creado
+     * @param token token para validar
+     * @return Actualiza un museo que ya exista, o lo guarda si no existe (solo si el token es correcto)
+     *
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Museo> put(@PathVariable Long id, @RequestBody Museo museoNuevo, @RequestParam String token){
+
+        if( !security.validateToken(token) ){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } else{
+            var museo = new Museo();
+
+            var museoSelect = repositorio.findById(id);
+
+            if(museoSelect.isEmpty()){
+                museo = museoNuevo;
+            } else{
+                museo = museoSelect.get();
+                museo.setNombre( museoNuevo.getNombre() );
+                museo.setUbicacion( museoNuevo.getUbicacion() );
+                museo.setHorario( museoNuevo.getHorario() );
+                museo.setPrecio( museoNuevo.getPrecio() );
+                museo.setCodigo(museoNuevo.getCodigo());
+                museo.setWeb(museoNuevo.getWeb());
+                museo.setDescripcion(museoNuevo.getDescripcion());
+            }
+
+            return new ResponseEntity<Museo>(repositorio.save(museo),HttpStatus.OK);
+        }
+
+    }
+
+    //METODOS DELETE.
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Museo> delete(@PathVariable Long id,  @RequestParam String token){
+
+        ResponseEntity<Museo> respuesta = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        if( security.validateToken(token) ){
+            Museo salida = new Museo();
+            if (repositorio.existsById(id)) {
+                salida = repositorio.findById(id).get();
+                repositorio.deleteById(id);
+                respuesta = new ResponseEntity<Museo>(salida, HttpStatus.OK);
+            } else {
+                respuesta = new ResponseEntity<Museo>(salida, HttpStatus.NOT_FOUND);
+            }
+        }
+        return respuesta;
+    }
 
 }

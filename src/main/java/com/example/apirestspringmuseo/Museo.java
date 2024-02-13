@@ -3,6 +3,8 @@ package com.example.apirestspringmuseo;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "museos")
@@ -17,4 +19,6 @@ public class Museo {
     private Integer codigo;
     private String web;
     private String descripcion;
+    @OneToMany(mappedBy = "museo", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    private List<Cuadro> cuadros;
 }
