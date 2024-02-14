@@ -1,10 +1,9 @@
-package com.example.apirestspringmuseo;
+package com.example.apirestspringmuseo.cuadro;
 
+import com.example.apirestspringmuseo.museo.Museo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 @Entity
@@ -14,11 +13,11 @@ public class Cuadro {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private Date fecha;
+    private Integer fecha;
     private String autor;
 
     @ManyToOne
-    @JoinColumn(name = "museo")
+    @JoinColumn(name = "museo", referencedColumnName = "nombre")
     @JsonIgnore
     private Museo museo;
 }

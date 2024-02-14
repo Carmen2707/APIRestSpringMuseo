@@ -1,5 +1,6 @@
-package com.example.apirestspringmuseo;
+package com.example.apirestspringmuseo.museo;
 
+import com.example.apirestspringmuseo.museo.Museo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -40,7 +41,6 @@ public interface MuseoRepository extends JpaRepository<Museo, Long> {
 
     @Query("SELECT m.nombre, m.web FROM Museo m")
     public List<Object> listaWebs();
-
 
 
 

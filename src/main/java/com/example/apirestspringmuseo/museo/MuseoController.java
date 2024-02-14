@@ -1,12 +1,12 @@
-package com.example.apirestspringmuseo;
+package com.example.apirestspringmuseo.museo;
 
+import com.example.apirestspringmuseo.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.swing.plaf.multi.MultiSeparatorUI;
 import java.util.List;
 
 @RestController
@@ -146,6 +146,8 @@ public class MuseoController {
         return repositorio.listaWebs();
     }
 
+
+
     //METODOS POST.
 
     @Autowired
@@ -156,7 +158,7 @@ public class MuseoController {
      * @param token token para validar
      * @return Crea un museo nuevo, pero solo si el token es válido.
      */
-    @PostMapping("/museo/post")
+    @PostMapping("/post")
     public ResponseEntity<Museo> nuevo(@RequestBody Museo museo, @RequestParam String token) {
         if (security.validateToken(token)) {
             return new ResponseEntity<Museo>(repositorio.save(museo), HttpStatus.OK);
@@ -203,6 +205,11 @@ public class MuseoController {
 
     }
 
+    /**
+     * @param id del museo
+     * @param token token validar
+     * @return Si el token es válido, elimina el museo pasado por parámetro
+     */
     //METODOS DELETE.
     @DeleteMapping("/{id}")
     public ResponseEntity<Museo> delete(@PathVariable Long id,  @RequestParam String token){

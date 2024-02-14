@@ -1,5 +1,6 @@
-package com.example.apirestspringmuseo;
+package com.example.apirestspringmuseo.museo;
 
+import com.example.apirestspringmuseo.cuadro.Cuadro;
 import jakarta.persistence.*;
 import lombok.Data;
 
