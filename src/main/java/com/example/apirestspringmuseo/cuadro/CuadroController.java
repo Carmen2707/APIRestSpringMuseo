@@ -2,6 +2,8 @@ package com.example.apirestspringmuseo.cuadro;
 
 import com.example.apirestspringmuseo.SecurityService;
 
+import com.example.apirestspringmuseo.museo.Museo;
+import com.example.apirestspringmuseo.museo.MuseoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,8 @@ import java.util.List;
 public class CuadroController {
     @Autowired //inicializar los componentes de sprint de forma automatica
     private CuadroRepository repositorioCuadro;
-
+    @Autowired //inicializar los componentes de sprint de forma automatica
+    private MuseoRepository museoRepository;
     //METODOS GET.
 
     /**
@@ -108,7 +111,26 @@ public List<Object> getUbicacionCuadros(){
     @PostMapping("/post")
     public ResponseEntity<Cuadro> nuevo(@RequestBody Cuadro cuadro, @RequestParam String token) {
         if (security.validateToken(token)) {
-            return new ResponseEntity<>(repositorioCuadro.save(cuadro), HttpStatus.OK);
+            // Verificar si el cuadro tiene un museo asignado
+            if (cuadro.getMuseo() != null) {
+                // Obtener el museo del repositorio por su nombre
+                Museo museo = museoRepository.findByNombre(cuadro.getMuseo().getNombre());
+
+                if (museo != null) {
+                    // Asignar el museo al cuadro
+                    cuadro.setMuseo(museo);
+                    // Guardar el cuadro en el repositorio
+                    Cuadro cuadroGuardado = repositorioCuadro.save(cuadro);
+                    return new ResponseEntity<>(cuadroGuardado, HttpStatus.OK);
+                } else {
+                    // El museo no existe en la base de datos
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                // El cuadro no tiene un museo asignado
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -142,7 +164,7 @@ public List<Object> getUbicacionCuadros(){
                 cuadro.setMuseo( cuadroNuevo.getMuseo() );
             }
 
-            return new ResponseEntity<Cuadro>(repositorioCuadro.save(cuadro),HttpStatus.OK);
+            return new ResponseEntity<>(repositorioCuadro.save(cuadro), HttpStatus.OK);
         }
 
     }
@@ -163,9 +185,9 @@ public List<Object> getUbicacionCuadros(){
             if (repositorioCuadro.existsById(id)) {
                 salida = repositorioCuadro.findById(id).get();
                 repositorioCuadro.deleteById(id);
-                respuesta = new ResponseEntity<Cuadro>(salida, HttpStatus.OK);
+                respuesta = new ResponseEntity<>(salida, HttpStatus.OK);
             } else {
-                respuesta = new ResponseEntity<Cuadro>(salida, HttpStatus.NOT_FOUND);
+                respuesta = new ResponseEntity<>(salida, HttpStatus.NOT_FOUND);
             }
         }
         return respuesta;

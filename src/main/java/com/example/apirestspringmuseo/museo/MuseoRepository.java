@@ -42,6 +42,6 @@ public interface MuseoRepository extends JpaRepository<Museo, Long> {
     @Query("SELECT m.nombre, m.web FROM Museo m")
     public List<Object> listaWebs();
 
-
+    Museo findByNombre(String nombre);
 
 }

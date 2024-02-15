@@ -18,6 +18,8 @@ public class Cuadro {
 
     @ManyToOne
     @JoinColumn(name = "museo", referencedColumnName = "nombre")
-    @JsonIgnore
+
     private Museo museo;
+
+
 }

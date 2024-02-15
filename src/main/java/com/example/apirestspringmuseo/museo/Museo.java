@@ -1,6 +1,7 @@
 package com.example.apirestspringmuseo.museo;
 
 import com.example.apirestspringmuseo.cuadro.Cuadro;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,10 @@ public class Museo {
     private Integer codigo;
     private String web;
     private String descripcion;
+    @JsonIgnore
     @OneToMany(mappedBy = "museo", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Cuadro> cuadros;
+
+    public Museo() {
+    }
 }

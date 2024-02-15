@@ -11,8 +11,6 @@ import javax.swing.event.ListDataEvent;
 import java.util.List;
 
 public interface CuadroRepository extends JpaRepository<Cuadro, Long> {
-
-
     //Consultas GET cuadros.
     public Cuadro getCuadroById(Long id);
 
