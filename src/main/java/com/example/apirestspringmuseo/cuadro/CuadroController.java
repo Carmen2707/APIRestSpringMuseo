@@ -111,26 +111,8 @@ public List<Object> getUbicacionCuadros(){
     @PostMapping("/post")
     public ResponseEntity<Cuadro> nuevo(@RequestBody Cuadro cuadro, @RequestParam String token) {
         if (security.validateToken(token)) {
-            // Verificar si el cuadro tiene un museo asignado
-            if (cuadro.getMuseo() != null) {
-                // Obtener el museo del repositorio por su nombre
-                Museo museo = museoRepository.findByNombre(cuadro.getMuseo().getNombre());
 
-                if (museo != null) {
-                    // Asignar el museo al cuadro
-                    cuadro.setMuseo(museo);
-                    // Guardar el cuadro en el repositorio
-                    Cuadro cuadroGuardado = repositorioCuadro.save(cuadro);
-                    return new ResponseEntity<>(cuadroGuardado, HttpStatus.OK);
-                } else {
-                    // El museo no existe en la base de datos
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                }
-            } else {
-                // El cuadro no tiene un museo asignado
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
+            return new ResponseEntity<Cuadro>(repositorioCuadro.save(cuadro), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }

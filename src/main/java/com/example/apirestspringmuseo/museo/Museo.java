@@ -25,6 +25,4 @@ public class Museo {
     @OneToMany(mappedBy = "museo", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<Cuadro> cuadros;
 
-    public Museo() {
-    }
 }
