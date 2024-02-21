@@ -138,9 +138,6 @@ public class MuseoController {
         return repositorio.museosAbrenSiempre();
     }
 
-
-    //METODOS POST.
-
     /**
      * @return Devuelve el nombre de los museos junto con su página web.
      */
@@ -149,6 +146,8 @@ public class MuseoController {
         return repositorio.listaWebs();
     }
 
+
+    //METODOS POST.
     /**
      * @param museo objeto msuseo
      * @param token token para validar
@@ -164,7 +163,6 @@ public class MuseoController {
     }
 
     //METODOS PUT.
-
 
     /**
      * @param id         del museo
