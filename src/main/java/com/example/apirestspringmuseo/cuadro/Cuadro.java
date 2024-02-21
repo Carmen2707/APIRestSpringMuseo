@@ -1,7 +1,6 @@
 package com.example.apirestspringmuseo.cuadro;
 
 import com.example.apirestspringmuseo.museo.Museo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,7 +17,6 @@ public class Cuadro {
 
     @ManyToOne
     @JoinColumn(name = "museo", referencedColumnName = "nombre")
-
     private Museo museo;
 
 

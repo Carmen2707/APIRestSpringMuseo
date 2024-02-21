@@ -1,47 +1,44 @@
 package com.example.apirestspringmuseo.museo;
 
-import com.example.apirestspringmuseo.museo.Museo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface MuseoRepository extends JpaRepository<Museo, Long> {
     //Consultas GET museo.
-    public Museo getMuseoById(Long id);
+    Museo getMuseoById(Long id);
 
-    public Museo getMuseoByNombre(String nombre);
+    Museo getMuseoByNombre(String nombre);
 
-    public Museo getMuseoByUbicacion(String ubicacion);
+    Museo getMuseoByUbicacion(String ubicacion);
 
-    public Museo getMuseoByHorario(String horario);
+    Museo getMuseoByHorario(String horario);
 
-    public Museo getMuseoByPrecio(Double precio);
+    Museo getMuseoByPrecio(Double precio);
 
-    public Museo getMuseoByCodigo(Integer codigo);
+    Museo getMuseoByCodigo(Integer codigo);
 
-    public Museo getMuseoByWeb(String web);
+    Museo getMuseoByWeb(String web);
 
-    public Museo getMuseoByDescripcion(String descripcion);
+    Museo getMuseoByDescripcion(String descripcion);
 
     @Query("SELECT m FROM Museo m WHERE m.precio=0.00")
-    public List<Museo> museosEntradaGratis();
+    List<Museo> museosEntradaGratis();
+
     @Query("SELECT m.nombre FROM Museo m")
-    public List<String> nombreMuseos();
+    List<String> nombreMuseos();
 
     @Query("SELECT COUNT(m) FROM Museo m")
-    public Integer cuantosMuseosHay();
+    Integer cuantosMuseosHay();
 
     @Query("SELECT m.nombre, m.precio FROM Museo m")
-        public List<Object> preciosMuseos();
+    List<Object> preciosMuseos();
 
     @Query("SELECT m FROM Museo m WHERE m.horario LIKE 'Todos los días%'")
-    public List<Museo> museosAbrenSiempre();
+    List<Museo> museosAbrenSiempre();
 
     @Query("SELECT m.nombre, m.web FROM Museo m")
-    public List<Object> listaWebs();
-
-    Museo findByNombre(String nombre);
+    List<Object> listaWebs();
 
 }

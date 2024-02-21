@@ -1,9 +1,6 @@
 package com.example.apirestspringmuseo.cuadro;
 
 import com.example.apirestspringmuseo.SecurityService;
-
-import com.example.apirestspringmuseo.museo.Museo;
-import com.example.apirestspringmuseo.museo.MuseoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +13,10 @@ import java.util.List;
 public class CuadroController {
     @Autowired //inicializar los componentes de sprint de forma automatica
     private CuadroRepository repositorioCuadro;
-    @Autowired //inicializar los componentes de sprint de forma automatica
-    private MuseoRepository museoRepository;
+
     //METODOS GET.
+    @Autowired
+    private SecurityService security;
 
     /**
      * @param id del cuadro
@@ -68,44 +66,41 @@ public class CuadroController {
     /**
      * @return Devuelve el número total de cuadros que hay en la base de datos.
      */
-@GetMapping("/totalCuadros")
-    public Integer getTotalCuadros(){
+    @GetMapping("/totalCuadros")
+    public Integer getTotalCuadros() {
         return repositorioCuadro.cuantosCuadrosHay();
-}
+    }
 
     /**
      * @return Devuelve una lista con el nombre de todos los autores que hay en la base de datos.
      */
-@GetMapping("/listaAutores")
-    public List<String> getTodosAutores(){
+    @GetMapping("/listaAutores")
+    public List<String> getTodosAutores() {
         return repositorioCuadro.listaAutores();
-}
+    }
 
     /**
      * @return Devuelve una lista con todos los cuadros junto con el nombre del museo en el que se encuentran.
      */
-@GetMapping("/ubicacionCuadro")
-public List<Object> getUbicacionCuadros(){
+    @GetMapping("/ubicacionCuadro")
+    public List<Object> getUbicacionCuadros() {
         return repositorioCuadro.listaUbicacionCuadros();
-}
+    }
+
+
+    //METODOS POST.
 
     /**
      * @return Devuelve una lista con todos los cuadros y su información.
      */
-@GetMapping("/detallesCuadros")
-    public List<Object> getDetallesCuadros(){
+    @GetMapping("/detallesCuadros")
+    public List<Object> getDetallesCuadros() {
         return repositorioCuadro.detallesCuadros();
-}
-
-
-//METODOS POST.
-
-    @Autowired
-    private SecurityService security;
+    }
 
     /**
      * @param cuadro cuadro nuevo
-     * @param token token para validar
+     * @param token  token para validar
      * @return Crea un nuevo cuadro, sólo si el token es válido.
      */
     @PostMapping("/post")
@@ -119,31 +114,31 @@ public List<Object> getUbicacionCuadros(){
     }
 
     //METODOS PUT.
+
     /**
-     * @param id del cuadro
+     * @param id          del cuadro
      * @param cuadroNuevo nuevo cuadro creado
-     * @param token token para validar
+     * @param token       token para validar
      * @return Actualiza un cuadro que ya exista, o lo guarda si no existe (solo si el token es correcto)
-     *
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Cuadro> put(@PathVariable Long id, @RequestBody Cuadro cuadroNuevo, @RequestParam String token){
+    public ResponseEntity<Cuadro> put(@PathVariable Long id, @RequestBody Cuadro cuadroNuevo, @RequestParam String token) {
 
-        if( !security.validateToken(token) ){
+        if (!security.validateToken(token)) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } else{
+        } else {
             var cuadro = new Cuadro();
 
             var cuadroSelect = repositorioCuadro.findById(id);
 
-            if(cuadroSelect.isEmpty()){
+            if (cuadroSelect.isEmpty()) {
                 cuadro = cuadroNuevo;
-            } else{
+            } else {
                 cuadro = cuadroSelect.get();
-                cuadro.setNombre( cuadroNuevo.getNombre() );
-                cuadro.setFecha( cuadroNuevo.getFecha() );
-                cuadro.setAutor( cuadroNuevo.getAutor() );
-                cuadro.setMuseo( cuadroNuevo.getMuseo() );
+                cuadro.setNombre(cuadroNuevo.getNombre());
+                cuadro.setFecha(cuadroNuevo.getFecha());
+                cuadro.setAutor(cuadroNuevo.getAutor());
+                cuadro.setMuseo(cuadroNuevo.getMuseo());
             }
 
             return new ResponseEntity<>(repositorioCuadro.save(cuadro), HttpStatus.OK);
@@ -151,18 +146,19 @@ public List<Object> getUbicacionCuadros(){
 
     }
     //METODOS DELETE.
+
     /**
-     * @param id del cuadro
+     * @param id    del cuadro
      * @param token token para validar
      * @return Si el token es válido, elimina el cuadro pasado por parámetro
      */
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Cuadro> delete(@PathVariable Long id,  @RequestParam String token){
+    public ResponseEntity<Cuadro> delete(@PathVariable Long id, @RequestParam String token) {
 
         ResponseEntity<Cuadro> respuesta = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 
-        if( security.validateToken(token) ){
+        if (security.validateToken(token)) {
             Cuadro salida = new Cuadro();
             if (repositorioCuadro.existsById(id)) {
                 salida = repositorioCuadro.findById(id).get();
