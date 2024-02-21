@@ -19,3 +19,4 @@ Para crear está API me he basado en una base de datos sobre museos. Hay dos tab
 - Museo (Museo)
 
 ## Endpoints 📌
+### Endpoints para museos:
