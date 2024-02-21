@@ -87,9 +87,6 @@ public class CuadroController {
         return repositorioCuadro.listaUbicacionCuadros();
     }
 
-
-    //METODOS POST.
-
     /**
      * @return Devuelve una lista con todos los cuadros y su información.
      */
@@ -98,6 +95,7 @@ public class CuadroController {
         return repositorioCuadro.detallesCuadros();
     }
 
+    //METODOS POST.
     /**
      * @param cuadro cuadro nuevo
      * @param token  token para validar
